@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS with fixed slider color
 st.markdown("""
     <style>
     .stApp {
@@ -29,6 +29,16 @@ st.markdown("""
     }
     .stMarkdown, h1, h2, h3, p, span, label {
         color: #2c3e50 !important;
+    }
+    /* Style for slider - new streamlit class names */
+    .st-emotion-cache-1y4p8pa {
+        width: 100%;
+    }
+    .st-emotion-cache-1y4p8pa .stSlider > div > div > div {
+        background-color: #4addbe !important;
+    }
+    .st-emotion-cache-1y4p8pa .stSlider > div > div > div > div {
+        background-color: #4addbe !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -104,25 +114,29 @@ def plot_predictions(tester, model):
     fig.update_layout(
         title={
             'text': "Energy Demand - Actual vs Predicted",
-            'font': {'color': '#2c3e50'},
-            'x': 0.5,
-            'xanchor': 'center'
+            'font': {'color': '#2c3e50', 'size': 24},
+            'y': 0.95
         },
         xaxis_title="Date",
         yaxis_title="Energy Demand (MW)",
         plot_bgcolor="white",
         paper_bgcolor="white",
-        font=dict(color="#2c3e50"),
+        showlegend=True,
         legend=dict(
-            font=dict(color="#2c3e50")
+            font=dict(
+                size=12,
+                color="#2c3e50"
+            )
         ),
         xaxis=dict(
             title=dict(font=dict(color="#2c3e50")),
-            tickfont=dict(color="#2c3e50")
+            tickfont=dict(color="#2c3e50"),
+            gridcolor='lightgray'
         ),
         yaxis=dict(
             title=dict(font=dict(color="#2c3e50")),
-            tickfont=dict(color="#2c3e50")
+            tickfont=dict(color="#2c3e50"),
+            gridcolor='lightgray'
         )
     )
     
@@ -138,25 +152,24 @@ def plot_feature_importance(model, feature_names):
                 x='importance', 
                 y='feature',
                 orientation='h',
-                title={
-                    'text': "Feature Importance",
-                    'font': {'color': '#2c3e50'},
-                    'x': 0.5,
-                    'xanchor': 'center'
-                },
                 color_discrete_sequence=["#4addbe"])
     
     fig.update_layout(
+        title={
+            'text': "Feature Importance",
+            'font': {'color': '#2c3e50', 'size': 24},
+            'y': 0.95
+        },
         plot_bgcolor="white",
         paper_bgcolor="white",
-        font=dict(color="#2c3e50"),
-        legend=dict(font=dict(color="#2c3e50")),
+        showlegend=False,
         xaxis=dict(
-            title=dict(font=dict(color="#2c3e50")),
-            tickfont=dict(color="#2c3e50")
+            title=dict(text="Importance", font=dict(color="#2c3e50")),
+            tickfont=dict(color="#2c3e50"),
+            gridcolor='lightgray'
         ),
         yaxis=dict(
-            title=dict(font=dict(color="#2c3e50")),
+            title=dict(text="Features", font=dict(color="#2c3e50")),
             tickfont=dict(color="#2c3e50")
         )
     )
