@@ -30,6 +30,18 @@ st.markdown("""
     .stMarkdown, h1, h2, h3, p, span, label {
         color: #2c3e50 !important;
     }
+    /* Style for slider */
+    .st-emotion-cache-1xw8zd0 input[type="range"] {
+        accent-color: #4addbe;
+    }
+    .st-emotion-cache-1xw8zd0 input[type="range"]::-webkit-slider-thumb {
+        background-color: #4addbe !important;
+    }
+    /* Ensure plotly titles are visible */
+    .js-plotly-plot .plotly .gtitle {
+        fill: #2c3e50 !important;
+        color: #2c3e50 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
