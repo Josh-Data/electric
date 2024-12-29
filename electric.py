@@ -106,7 +106,15 @@ def plot_predictions(tester, model):
         yaxis_title="Energy Demand (MW)",
         plot_bgcolor="white",
         paper_bgcolor="white",
-        font=dict(color="#2c3e50")
+        font=dict(color="#2c3e50"),
+        xaxis=dict(
+            title=dict(font=dict(color="#2c3e50")),
+            tickfont=dict(color="#2c3e50")
+        ),
+        yaxis=dict(
+            title=dict(font=dict(color="#2c3e50")),
+            tickfont=dict(color="#2c3e50")
+        )
     )
     
     return fig
@@ -121,12 +129,21 @@ def plot_feature_importance(model, feature_names):
                 x='importance', 
                 y='feature',
                 orientation='h',
-                title="Feature Importance")
+                title="Feature Importance",
+                color_discrete_sequence=["#4addbe"])  # Set bar color to turquoise
     
     fig.update_layout(
         plot_bgcolor="white",
         paper_bgcolor="white",
-        font=dict(color="#2c3e50")
+        font=dict(color="#2c3e50"),
+        xaxis=dict(
+            title=dict(font=dict(color="#2c3e50")),
+            tickfont=dict(color="#2c3e50")
+        ),
+        yaxis=dict(
+            title=dict(font=dict(color="#2c3e50")),
+            tickfont=dict(color="#2c3e50")
+        )
     )
     
     return fig
