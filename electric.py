@@ -30,18 +30,6 @@ st.markdown("""
     .stMarkdown, h1, h2, h3, p, span, label {
         color: #2c3e50 !important;
     }
-    /* Style for slider */
-    .st-emotion-cache-1xw8zd0 input[type="range"] {
-        accent-color: #4addbe;
-    }
-    .st-emotion-cache-1xw8zd0 input[type="range"]::-webkit-slider-thumb {
-        background-color: #4addbe !important;
-    }
-    /* Ensure plotly titles are visible */
-    .js-plotly-plot .plotly .gtitle {
-        fill: #2c3e50 !important;
-        color: #2c3e50 !important;
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -114,12 +102,20 @@ def plot_predictions(tester, model):
     ))
     
     fig.update_layout(
-        title="Energy Demand - Actual vs Predicted",
+        title={
+            'text': "Energy Demand - Actual vs Predicted",
+            'font': {'color': '#2c3e50'},
+            'x': 0.5,
+            'xanchor': 'center'
+        },
         xaxis_title="Date",
         yaxis_title="Energy Demand (MW)",
         plot_bgcolor="white",
         paper_bgcolor="white",
         font=dict(color="#2c3e50"),
+        legend=dict(
+            font=dict(color="#2c3e50")
+        ),
         xaxis=dict(
             title=dict(font=dict(color="#2c3e50")),
             tickfont=dict(color="#2c3e50")
@@ -142,13 +138,19 @@ def plot_feature_importance(model, feature_names):
                 x='importance', 
                 y='feature',
                 orientation='h',
-                title="Feature Importance",
+                title={
+                    'text': "Feature Importance",
+                    'font': {'color': '#2c3e50'},
+                    'x': 0.5,
+                    'xanchor': 'center'
+                },
                 color_discrete_sequence=["#4addbe"])
     
     fig.update_layout(
         plot_bgcolor="white",
         paper_bgcolor="white",
         font=dict(color="#2c3e50"),
+        legend=dict(font=dict(color="#2c3e50")),
         xaxis=dict(
             title=dict(font=dict(color="#2c3e50")),
             tickfont=dict(color="#2c3e50")
