@@ -25,6 +25,7 @@ st.markdown("""
     .stButton>button {
         background-color: #4addbe;
         color: white;
+        border: 1px solid #2c3e50 !important;
     }
     .stMarkdown, h1, h2, h3, p, span, label {
         color: #2c3e50 !important;
@@ -130,7 +131,7 @@ def plot_feature_importance(model, feature_names):
                 y='feature',
                 orientation='h',
                 title="Feature Importance",
-                color_discrete_sequence=["#4addbe"])  # Set bar color to turquoise
+                color_discrete_sequence=["#4addbe"])
     
     fig.update_layout(
         plot_bgcolor="white",
@@ -179,26 +180,14 @@ def main():
                 
                 st.success("Model trained successfully!")
                 
-                # Display training visualizations
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.subheader("Model Predictions")
-                    pred_fig = plot_predictions(test_data, model)
-                    st.plotly_chart(pred_fig, use_container_width=True)
-                
-                with col2:
-                    st.subheader("Feature Importance")
-                    imp_fig = plot_feature_importance(model, feature_names)
-                    st.plotly_chart(imp_fig, use_container_width=True)
-                
             except Exception as e:
                 st.error(f"Error during training: {str(e)}")
                 st.write("Full error:", str(e))
                 return
 
-    # Prediction Interface
+    # Always show visualizations if model exists
     if 'model' in st.session_state:
+        # Prediction Interface first
         st.header("Make Predictions")
         
         col1, col2 = st.columns(2)
@@ -221,6 +210,20 @@ def main():
                 st.success(f"Predicted Energy Demand: {prediction:,.0f} MW")
             except Exception as e:
                 st.error(f"Error during prediction: {str(e)}")
+
+        # Show visualizations after prediction section
+        st.header("Model Analysis")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.subheader("Model Predictions")
+            pred_fig = plot_predictions(st.session_state['test_data'], st.session_state['model'])
+            st.plotly_chart(pred_fig, use_container_width=True)
+        
+        with col2:
+            st.subheader("Feature Importance")
+            imp_fig = plot_feature_importance(st.session_state['model'], st.session_state['feature_names'])
+            st.plotly_chart(imp_fig, use_container_width=True)
 
 if __name__ == "__main__":
     main()
