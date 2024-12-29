@@ -52,62 +52,74 @@ def time_features(df):
     return df
 
 def train_model(df):
+    st.write("Starting model training...")  # Debug print
+    
     # Add time features
     df = time_features(df)
+    st.write("Time features added...")  # Debug print
     
     # Split data
     length = df.shape[0]
     main = int(length * 0.8)
     trainer = df[:main]
     tester = df[main:]
+    st.write("Data split completed...")  # Debug print
     
-    # Prepare features
     X = tester.drop(columns=["PJME_MW"])
     y = tester.PJME_MW
     
-    # Train-test split
     X_train, X_val, y_train, y_val = tts(X, y, train_size=0.8, random_state=42)
+    st.write("Train-test split done...")  # Debug print
     
-    # Train model
     model = xgb.XGBRegressor()
+    st.write("Training XGBoost model...")  # Debug print
     model.fit(X_train, y_train, 
              eval_set=[(X_train, y_train), (X_val, y_val)],
              verbose=False)
     
+    st.write("Model training completed!")  # Debug print
     return model, tester, X.columns.tolist()
 
-def plot_predictions(tester, model):
-    X_tester = tester.drop(columns=["PJME_MW"])
-    result = model.predict(X_tester)
-    tester = tester.copy()
-    tester["prediction"] = np.round(result, 0)
+def main():
+    st.title("PJME Energy Demand Predictor")
     
-    fig = go.Figure()
+    # Debug print for data loading
+    st.write("Attempting to load data...")
+    df = load_data()
     
-    fig.add_trace(go.Scatter(
-        x=tester.index,
-        y=tester.PJME_MW,
-        name="Actual",
-        line=dict(color="#4addbe")
-    ))
+    if df is None:
+        st.error("Could not load the dataset!")
+        return
     
-    fig.add_trace(go.Scatter(
-        x=tester.index,
-        y=tester.prediction,
-        name="Predicted",
-        line=dict(color="#34495e", dash="dot")
-    ))
+    # Print the first few rows of the data to verify it loaded correctly
+    st.write("First few rows of the data:")
+    st.write(df.head())
+        
+    st.success("Data loaded successfully!")
     
-    fig.update_layout(
-        title="Energy Demand - Actual vs Predicted",
-        xaxis_title="Date",
-        yaxis_title="Energy Demand (MW)",
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        font=dict(color="#2c3e50")
-    )
-    
-    return fig
+    # Training section
+    st.header("Model Training")
+    if st.button("Train Model"):
+        st.write("Train Model button clicked!")  # Debug print
+        with st.spinner("Training in progress..."):
+            try:
+                st.write("Starting model training process...")  # Debug print
+                model, test_data, feature_names = train_model(df)
+                st.write("Model training completed, saving to session state...")  # Debug print
+                
+                st.session_state['model'] = model
+                st.session_state['test_data'] = test_data
+                st.session_state['feature_names'] = feature_names
+                
+                st.success("Model trained successfully!")
+                
+                # Rest of your visualization code...
+                
+            except Exception as e:
+                st.error(f"Error during training: {str(e)}")
+                st.write("Full error:", str(e))  # Debug print
+                return
+
 
 def plot_feature_importance(model, feature_names):
     importance = pd.DataFrame({
